@@ -7,23 +7,44 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #000000; }
+        :root {
+            --bg-cute: #f7f4ff;
+            --accent-cute: #c9b6ff;
+            --text-cute: #1a1a1a;
+            
+            --bg-unstable: #2a1f3d;
+            --accent-unstable: #ff4fd8;
+            --text-unstable: #ece6ff;
+            
+            --bg-corrupt: #0b0000;
+            --accent-corrupt: #ff0033;
+            --text-corrupt: #ff0033;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
+            background-color: var(--bg-cute);
+            color: var(--text-cute);
             background-attachment: fixed;
             overflow-x: hidden;
             cursor: crosshair;
-            transition: background-color 0.5s ease, color 0.5s ease;
+            transition: background-color 0.8s steps(4), color 0.5s ease, filter 1s ease;
         }
+
+        /* --- 💀 EFECTO RUIDO (Grain) --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: overlay;
+        }
+
         .mono { font-family: 'JetBrains Mono', monospace; }
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .reveal { opacity: 0; transform: translateY(20px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
-        .reveal.active { opacity: 1; transform: translateY(0); }
         
         #bg-grid {
             position: fixed; top: 0; left: 0; width: 120%; height: 120%;
@@ -31,6 +52,20 @@
             background-size: 50px 50px;
             opacity: 0.05; z-index: -1;
             pointer-events: none;
+        }
+
+        /* --- 💀 CORRUPCIÓN VISUAL --- */
+        .body-glitch {
+            animation: body-glitch-anim 0.2s infinite;
+        }
+
+        @keyframes body-glitch-anim {
+            0% { transform: translate(0); filter: hue-rotate(0deg); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(3px, -3px); }
+            60% { filter: contrast(250%) brightness(1.2); }
+            80% { transform: translate(-2px, 2px); filter: invert(0.1); }
+            100% { transform: translate(0); }
         }
 
         /* --- 👁️ ENJAMBRE DE OJOS --- */
@@ -58,7 +93,6 @@
         }
         .eye-vibrate { animation: core-vibrate 0.1s infinite !important; }
 
-        /* --- ESTADO PARALIZADO --- */
         .eye-frozen {
             animation: frozen-pulse 1s infinite !important;
             opacity: 1 !important;
@@ -81,7 +115,7 @@
             100% { transform: translate(0); }
         }
 
-        /* --- 💬 SISTEMA DE FRASES (GHOST MESSAGES) --- */
+        /* --- 💬 GHOST MESSAGES --- */
         .ghost-msg {
             position: fixed;
             pointer-events: none;
@@ -104,7 +138,7 @@
         }
 
         .ghost-glitch {
-            color: #ff4444;
+            color: var(--accent-unstable);
             text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff;
             animation: ghost-shake 0.2s infinite;
         }
@@ -115,6 +149,29 @@
             50% { transform: translate(-1px, 2px); }
             75% { transform: translate(1px, 1px); }
             100% { transform: translate(0); }
+        }
+
+        /* --- CURSOR INFECTADO --- */
+        .cursor-scrap {
+            position: fixed;
+            pointer-events: none;
+            z-index: 200;
+            color: var(--accent-corrupt);
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.7;
+            animation: scrap-fade 0.3s forwards;
+        }
+        @keyframes scrap-fade {
+            to { opacity: 0; transform: translateY(-10px) scale(0.5); }
+        }
+
+        /* --- ELEMENTOS DUPLICADOS --- */
+        .fake-clone {
+            pointer-events: none;
+            z-index: 5;
+            filter: blur(1px);
+            mix-blend-mode: difference;
         }
 
         /* --- GLITCH SYSTEM --- */
@@ -134,6 +191,40 @@
 
         .word-glitch { display: inline-block; transition: opacity 0.1s ease; }
         .word-glitch.hidden { opacity: 0; }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- EVENTOS DE SISTEMA (INFERIOR IZQUIERDA) --- */
+        #system-status-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: var(--accent-corrupt);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 9999;
+            pointer-events: none;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* --- REACCIONES (INFERIOR DERECHA) --- */
+        #reaction-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            color: var(--accent-corrupt);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 9999;
+            pointer-events: none;
+            text-transform: uppercase;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -141,6 +232,8 @@
     <div id="bg-grid"></div>
     <div id="eye-swarm"></div>
     <div id="ghost-container"></div>
+    <div id="system-status-msg"></div>
+    <div id="reaction-msg"></div>
 
     <nav class="fixed top-0 w-full z-[100] border-b border-black/5 bg-white/5 backdrop-blur-md transition-all">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -161,8 +254,8 @@
                 Protocolo de Vigilancia Activo
             </span>
             <h1 class="text-6xl md:text-[90px] font-extrabold mb-10" id="main-title">
-                El sistema estaba apagado.....<br>
-                Porque lo encendiste?
+                No estás solo.<br>
+                Nosotros tampoco.
             </h1>
             <p class="text-xl md:text-2xl opacity-70 max-w-2xl mx-auto mb-12 font-light" id="main-desc">
                 El sistema ya no solo responde. Ahora, te observa de vuelta.
@@ -187,46 +280,105 @@
         const logsContainer = document.getElementById('logs');
         const heroCta = document.getElementById('hero-cta');
         let chaos = 0;
+        let scrollPercent = 0;
 
-        // --- 👁️ SISTEMA DE ENJAMBRE ---
-        const swarmContainer = document.getElementById('eye-swarm');
-        const eyesCount = 6; 
-        const eyes = [];
+        // --- 🧬 SISTEMA DE CORRUPCIÓN ACUMULATIVA ---
+        let corruption = Number(localStorage.getItem("pf_corruption") || 0);
 
-        for (let i = 0; i < eyesCount; i++) {
-            const socket = document.createElement('div');
-            socket.className = 'eye-socket';
-            socket.style.left = `${Math.random() * 90}%`;
-            socket.style.top = `${Math.random() * 90}%`;
-            
-            const iris = document.createElement('div');
-            iris.className = 'eye-iris';
-            
-            socket.appendChild(iris);
-            swarmContainer.appendChild(socket);
-
-            const eyeObj = { socket, iris, frozen: false };
-            eyes.push(eyeObj);
-
-            socket.addEventListener('click', (e) => {
-                e.stopPropagation();
-                eyeObj.frozen = !eyeObj.frozen;
-
-                if (eyeObj.frozen) {
-                    socket.classList.remove('eye-vibrate');
-                    socket.classList.add('eye-frozen');
-                    addLog(`[ALERTA] Unidad ocular #${i + 1} paralizada`, true);
-                    spawnGhostMsg("CONEXIÓN INTERRUMPIDA", e.clientX, e.clientY, true);
-                } else {
-                    socket.classList.remove('eye-frozen');
-                    iris.style.backgroundColor = 'currentColor';
-                    socket.style.opacity = (chaos > 1) ? '0.6' : '0.3';
-                    addLog(`[LOG] Unidad ocular #${i + 1} reactivada`);
-                }
-            });
+        function addCorruption(amount) {
+            corruption += amount;
+            localStorage.setItem("pf_corruption", corruption);
+            applyCorruption();
         }
 
+        function applyCorruption() {
+            if (corruption > 3) body.style.filter = "contrast(120%)";
+            if (corruption > 6) body.style.filter = "contrast(150%) hue-rotate(20deg)";
+            if (corruption > 10) {
+                body.style.backgroundColor = "var(--bg-corrupt)";
+                body.style.filter = "contrast(200%) saturate(200%)";
+            }
+        }
+
+        // --- 🧠 MOTOR DE ESTADOS ---
+        function getPulseState() {
+            const hour = new Date().getHours();
+            if (scrollPercent > 80 || (hour >= 3 && hour <= 5) || corruption > 10) return "critical";
+            if (scrollPercent > 40 || (hour >= 0 && hour < 7) || corruption > 5) return "unstable";
+            if (hour >= 7 && hour < 18) return "stable";
+            return "corrupted";
+        }
+
+        function updateVisualPalette() {
+            const state = getPulseState();
+            const isGlitching = Math.random() > 0.95;
+            let visualState = isGlitching ? "unstable" : state;
+
+            if (visualState === "stable") {
+                body.style.backgroundColor = "var(--bg-cute)";
+                body.style.color = "var(--text-cute)";
+                heroCta.style.backgroundColor = "var(--text-cute)";
+            } else if (visualState === "unstable" || visualState === "corrupted") {
+                body.style.backgroundColor = "var(--bg-unstable)";
+                body.style.color = "var(--text-unstable)";
+                heroCta.style.backgroundColor = "var(--accent-unstable)";
+            } else {
+                body.style.backgroundColor = "var(--bg-corrupt)";
+                body.style.color = "var(--accent-corrupt)";
+                heroCta.style.backgroundColor = "var(--accent-corrupt)";
+            }
+        }
+
+        // --- 👁️ REACCIONES AL COMPORTAMIENTO ---
+        function triggerReaction(type) {
+            const messages = {
+                fast_scroll: "SLOW DOWN",
+                idle: "WHY ARE YOU WAITING?",
+                click: "NOTED"
+            };
+
+            if (type === "click") addCorruption(0.2);
+            if (type === "fast_scroll") addCorruption(0.5);
+            if (type === "idle") addCorruption(0.1);
+
+            const msg = messages[type];
+            const reactionEl = document.getElementById('reaction-msg');
+            if (reactionEl) {
+                reactionEl.innerText = msg;
+                reactionEl.style.opacity = "1";
+                setTimeout(() => reactionEl.style.opacity = "0", 2000);
+            }
+        }
+
+        let lastScrollTime = 0;
+        window.addEventListener("scroll", () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            scrollPercent = (winScroll / height) * 100;
+            updateVisualPalette();
+
+            const now = Date.now();
+            if (now - lastScrollTime < 50 && now - lastScrollTime > 0) {
+                triggerReaction("fast_scroll");
+            }
+            lastScrollTime = now;
+        });
+
+        let idleTimer;
         document.addEventListener("mousemove", (e) => {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => triggerReaction("idle"), 8000);
+
+            // Cursor infectado
+            const scrap = document.createElement("div");
+            const symbols = ["█", "▒", "░", "#", "?", "0", "1"];
+            scrap.className = "cursor-scrap";
+            scrap.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            scrap.style.left = e.clientX + "px";
+            scrap.style.top = e.clientY + "px";
+            document.body.appendChild(scrap);
+            setTimeout(() => scrap.remove(), 300);
+
             eyes.forEach(eye => {
                 if (eye.frozen) return;
                 const rect = eye.socket.getBoundingClientRect();
@@ -235,84 +387,100 @@
                 const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
                 const distance = Math.min(rect.width / 4, Math.hypot(e.clientX - eyeX, e.clientY - eyeY) / 15);
                 eye.iris.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
-                const distFull = Math.hypot(e.clientX - eyeX, e.clientY - eyeY);
-                if (distFull < 120) {
-                    eye.socket.classList.add('eye-vibrate');
-                    eye.iris.style.backgroundColor = "#ff4444";
-                    eye.socket.style.opacity = "1";
-                } else {
-                    eye.socket.classList.remove('eye-vibrate');
-                    eye.iris.style.backgroundColor = "currentColor";
-                    eye.socket.style.opacity = (chaos > 1) ? "0.6" : "0.3";
-                }
             });
         });
 
-        // --- 💬 SISTEMA DE FRASES ALEATORIAS (GHOST MESSAGES) ---
-        const ghostPhrases = [
-            "No estabas dentro del sistema… hasta que lo miraste.",
-            "El juego no está cargando. Te está observando.",
-            "Sabemos cuándo lees esto. Siempre lo supimos.",
-            "Si estás viendo esto, ya es demasiado tarde.",
-            "No hay otros jugadores. Solo tú… repetido.",
-            "Archivo recuperado de una versión que nunca existió.",
-            "Este fragmento fue eliminado por razones no registradas.",
-            "Los errores no son fallos. Son intentos de contacto.",
-            "No estás jugando el juego. El juego te está renderizando.",
-            "Hemos registrado tu intención de salir.",
-            "Sigue mirando. Nosotros lo hacemos.",
-            "¿Quién parpadeó primero?",
-            "El código tiene hambre."
-        ];
+        document.addEventListener("click", () => triggerReaction("click"));
 
-        function spawnGhostMsg(text = null, x = null, y = null, isCritical = false) {
-            const container = document.getElementById('ghost-container');
-            const msg = document.createElement('div');
-            msg.className = 'ghost-msg';
-            if (isCritical || Math.random() > 0.7) msg.classList.add('ghost-glitch');
-            
-            msg.textContent = text || ghostPhrases[Math.floor(Math.random() * ghostPhrases.length)];
-            
-            // Posición aleatoria si no se especifica
-            const posX = x !== null ? x : (Math.random() * 60 + 20) + "%";
-            const posY = y !== null ? y : (Math.random() * 60 + 20) + "%";
-            
-            msg.style.left = typeof posX === 'string' ? posX : posX + "px";
-            msg.style.top = typeof posY === 'string' ? posY : posY + "px";
-            
-            container.appendChild(msg);
-            setTimeout(() => msg.remove(), 4000);
+        // --- 🕳️ INESTABILIDAD ESTRUCTURAL ---
+        setInterval(() => {
+            const elements = document.querySelectorAll("h1, p, button, span");
+            const target = elements[Math.floor(Math.random() * elements.length)];
+            if (!target) return;
+
+            const originalOpacity = target.style.opacity;
+            target.style.opacity = "0";
+            setTimeout(() => target.style.opacity = originalOpacity || "1", 800);
+        }, 7000);
+
+        setInterval(() => {
+            const el = document.querySelector("p");
+            if (el && Math.random() > 0.8) {
+                const originalText = el.innerText;
+                el.innerText = "/// MISSING DATA ///";
+                setTimeout(() => el.innerText = originalText, 2000);
+            }
+        }, 12000);
+
+        // --- 👁️ SISTEMA DE ENJAMBRE ---
+        const swarmContainer = document.getElementById('eye-swarm');
+        const eyesCount = 6; 
+        const eyes = [];
+        for (let i = 0; i < eyesCount; i++) {
+            const socket = document.createElement('div');
+            socket.className = 'eye-socket';
+            socket.style.left = `${Math.random() * 90}%`;
+            socket.style.top = `${Math.random() * 90}%`;
+            const iris = document.createElement('div');
+            iris.className = 'eye-iris';
+            socket.appendChild(iris);
+            swarmContainer.appendChild(socket);
+            const eyeObj = { socket, iris, frozen: false };
+            eyes.push(eyeObj);
+
+            socket.addEventListener('click', (e) => {
+                e.stopPropagation();
+                eyeObj.frozen = !eyeObj.frozen;
+                if (eyeObj.frozen) {
+                    socket.classList.add('eye-frozen');
+                    addLog(`[ALERTA] Unidad ocular #${i + 1} paralizada`, true);
+                } else {
+                    socket.classList.remove('eye-frozen');
+                    addLog(`[LOG] Unidad ocular #${i + 1} reactivada`);
+                }
+            });
         }
 
-        // Aparecer frases al azar cada cierto tiempo
-        setInterval(() => {
-            if (Math.random() < 0.3) { // 30% de probabilidad cada ciclo
-                spawnGhostMsg();
+        // --- 💀 EVENTOS DE SISTEMA ---
+        function systemEvent() {
+            const state = getPulseState();
+            const messages = {
+                stable: ["SYSTEM ONLINE", "MONITORING ACTIVE"],
+                unstable: ["USER PATTERN IRREGULAR", "RE-CALIBRATING..."],
+                corrupted: ["DATA LEAK IN PROGRESS", "CORRUPTION SPREADING"],
+                critical: ["/// ENTITY AWAKE ///", "DEEP DESCENT DETECTED"]
+            };
+            const pool = messages[state];
+            const msg = pool[Math.floor(Math.random() * pool.length)];
+            const statusEl = document.getElementById('system-status-msg');
+            if (statusEl) {
+                statusEl.innerText = `[ ${msg} ]`;
+                statusEl.style.opacity = "1";
+                if (state === "critical" || state === "corrupted") {
+                    body.classList.add("body-glitch");
+                    setTimeout(() => body.classList.remove("body-glitch"), 400);
+                }
+                setTimeout(() => statusEl.style.opacity = "0.3", 2000);
             }
+        }
+
+        setInterval(() => {
+            if (Math.random() > 0.7) systemEvent();
         }, 5000);
 
-        // --- COLORES Y SCROLL ---
-        function lerpColor(a, b, amount) {
-            const ah = parseInt(a.replace(/#/g, ''), 16),
-                  ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
-                  bh = parseInt(b.replace(/#/g, ''), 16),
-                  br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff;
-            return `rgb(${ar + amount * (br - ar) | 0},${ag + amount * (bg - ag) | 0},${ab + amount * (bb - ab) | 0})`;
-        }
-
-        let targetScroll = 0, currentScroll = 0;
-        window.addEventListener("scroll", () => targetScroll = window.scrollY);
-
-        function frame() {
-            currentScroll += (targetScroll - currentScroll) * 0.08;
-            const scroll = currentScroll / (document.documentElement.scrollHeight - window.innerHeight);
-            let bg = scroll < 0.5 ? lerpColor("#FDFCFD", "#2D0B5A", scroll/0.5) : lerpColor("#2D0B5A", "#0F0202", (scroll-0.5)/0.5);
-            let text = scroll < 0.5 ? lerpColor("#1A1A1A", "#E9D5FF", scroll/0.5) : lerpColor("#E9D5FF", "#ff4444", (scroll-0.5)/0.5);
-            body.style.backgroundColor = bg;
-            body.style.color = text;
-            requestAnimationFrame(frame);
-        }
-        frame();
+        window.addEventListener("load", () => {
+            if (!localStorage.getItem("pulseforge_seen")) {
+                body.classList.add("body-glitch");
+                const overlay = document.createElement("div");
+                overlay.innerText = "WE WERE WAITING FOR YOU...";
+                overlay.style.cssText = "position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); color:var(--accent-corrupt); font-size:2.5rem; font-weight:900; z-index:9999; font-family:monospace; background:black; padding:20px 40px; border:4px solid var(--accent-corrupt);";
+                document.body.appendChild(overlay);
+                setTimeout(() => { overlay.remove(); body.classList.remove("body-glitch"); }, 2500);
+                localStorage.setItem("pulseforge_seen", "true");
+            }
+            applyCorruption();
+            updateVisualPalette();
+        });
 
         // --- GLITCH & CAOS ---
         const glitchTargets = [mainTitle, mainDesc, heroCta, document.querySelector("nav"), document.getElementById("footer-text")];
@@ -325,21 +493,16 @@
         function addLog(text, highlight = false) {
             const div = document.createElement('div');
             div.textContent = text;
-            if (highlight) div.style.color = "#ff4444";
+            if (highlight) div.style.color = "var(--accent-corrupt)";
             logsContainer.appendChild(div);
             if (logsContainer.children.length > 10) logsContainer.removeChild(logsContainer.children[0]);
         }
 
         setInterval(() => {
-            chaos += 0.03;
             if (Math.random() < 0.3) {
                 const el = glitchTargets[Math.floor(Math.random() * glitchTargets.length)];
                 el.classList.add("glitch-active");
                 setTimeout(() => el.classList.remove("glitch-active"), 150);
-            }
-            if (chaos > 2 && Math.random() < 0.05) {
-                addLog("[SISTEMA] Red neuronal saturada", true);
-                spawnGhostMsg("ERROR CRÍTICO DE PERCEPCIÓN", null, null, true);
             }
         }, 2000);
 
@@ -352,22 +515,17 @@
 
         setInterval(() => {
             const words = document.querySelectorAll(".word-glitch");
+            if (words.length === 0) return;
             const rw = words[Math.floor(Math.random() * words.length)];
             rw.classList.add("hidden");
             setTimeout(() => rw.classList.remove("hidden"), 200);
         }, 1500);
 
         document.addEventListener("mousedown", (e) => {
-            eyes.forEach(eye => {
-                if (!eye.frozen) eye.socket.style.transform = "scale(0.7)";
-            });
-            addLog("[LOG] Interacción táctil detectada");
-            if (Math.random() > 0.8) spawnGhostMsg("DEDO DETECTADO", e.clientX, e.clientY);
+            eyes.forEach(eye => { if (!eye.frozen) eye.socket.style.transform = "scale(0.7)"; });
         });
         document.addEventListener("mouseup", () => {
-            eyes.forEach(eye => {
-                if (!eye.frozen) eye.socket.style.transform = "scale(1)";
-            });
+            eyes.forEach(eye => { if (!eye.frozen) eye.socket.style.transform = "scale(1)"; });
         });
 
         const observer = new IntersectionObserver((entries) => {
