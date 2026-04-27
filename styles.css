@@ -1,0 +1,168 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body {
+    background:black;
+    color:white;
+    font-family:"Courier New", monospace;
+    overflow-x:hidden;
+}
+
+/* ruido */
+.noise {
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:url("https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif");
+    opacity:0.03;
+    pointer-events:none;
+}
+
+/* CRT */
+body::after {
+    content:"";
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events:none;
+    z-index:9998;
+}
+
+/* HERO */
+.hero {
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+/* glitch */
+.glitch {
+    font-size:4rem;
+    position:relative;
+    animation:flicker 2s infinite;
+}
+
+.glitch::before,
+.glitch::after {
+    content:attr(data-text);
+    position:absolute;
+    left:0;
+    color:red;
+    width:100%;
+    overflow:hidden;
+}
+
+.glitch::before { animation:glitchTop 2s infinite; }
+.glitch::after { animation:glitchBottom 2s infinite; }
+
+@keyframes flicker {
+    0%,100% {opacity:1;}
+    50% {opacity:0.6;}
+}
+
+@keyframes glitchTop {
+    0% {clip-path: inset(0 0 80% 0);}
+    50% {clip-path: inset(0 0 10% 0);}
+    100% {clip-path: inset(0 0 80% 0);}
+}
+
+@keyframes glitchBottom {
+    0% {clip-path: inset(80% 0 0 0);}
+    50% {clip-path: inset(10% 0 0 0);}
+    100% {clip-path: inset(80% 0 0 0);}
+}
+
+.subtitle {
+    margin-top:20px;
+    opacity:0.7;
+}
+
+/* botones */
+.btn {
+    margin-top:30px;
+    padding:15px 40px;
+    border:1px solid red;
+    background:transparent;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:hover {
+    background:red;
+    color:black;
+}
+
+/* secciones */
+section {
+    padding:80px 20px;
+    text-align:center;
+}
+
+/* cards */
+.cards {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
+}
+
+.card {
+    border:1px solid red;
+    padding:20px;
+    width:200px;
+    opacity:0.8;
+    transition:0.3s;
+}
+
+.card:hover {
+    background:red;
+    color:black;
+}
+
+/* logs */
+.logs {
+    max-width:600px;
+    margin:auto;
+    text-align:left;
+}
+
+.log {
+    border-left:2px solid red;
+    padding-left:10px;
+    margin:10px 0;
+    opacity:0.8;
+}
+
+/* efectos */
+.flash {
+    animation:flashGlitch 0.2s;
+}
+
+@keyframes flashGlitch {
+    0% {background:white; color:black;}
+    100% {background:black; color:white;}
+}
+
+.distort {
+    transform:skewX(10deg) scale(1.02);
+}
+
+/* footer */
+footer {
+    text-align:center;
+    padding:30px;
+    opacity:0.5;
+}

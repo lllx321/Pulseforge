@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Forge</title>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="noise"></div>
+
+<!-- AUDIO -->
+<audio id="bgSound" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_3c3a0e6c0f.mp3">
+</audio>
+
+<!-- HERO -->
+<section class="hero">
+    <h1 class="glitch" data-text="PULSE FORGE">PULSE FORGE</h1>
+    <p class="subtitle" id="subtitle">Inicializando sistema...</p>
+    <button class="btn" id="enterBtn">ENTRAR</button>
+</section>
+
+<!-- ANOMALÍAS -->
+<section>
+    <h2>ANOMALÍAS</h2>
+    <div class="cards">
+        <div class="card">👁️ El sistema observa</div>
+        <div class="card">⚙️ Responde a tus acciones</div>
+        <div class="card">🩸 Cada cambio deja rastro</div>
+        <div class="card">🔁 Nada reinicia igual</div>
+    </div>
+</section>
+
+<!-- REGISTROS -->
+<section class="logs">
+    <h2>REGISTROS</h2>
+    <div class="log">[001] señal detectada...</div>
+    <div class="log">[014] cambio no autorizado</div>
+    <div class="log">[029] comportamiento anómalo</div>
+    <div class="log">[???] acceso observado</div>
+</section>
+
+<!-- CTA -->
+<section>
+    <h2>El sistema ya te detectó</h2>
+    <button class="btn" onclick="fakeAccessSequence()">ACCEDER</button>
+</section>
+
+<footer>Pulse Forge // conexión inestable</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
