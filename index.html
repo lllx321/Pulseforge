@@ -1,102 +1,321 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulse Forge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PULSE FORGE | Sistema Activo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #000000; }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hero-title { transition: transform 0.1s ease; }
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        #bg-grid {
+            position: fixed; top: 0; left: 0; width: 120%; height: 120%;
+            background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.05; z-index: -1;
+            pointer-events: none;
+        }
 
-<link rel="stylesheet" href="styles.css">
+        /* --- 🧬 BLOQUE 14: SISTEMA DE GLITCH GLOBAL (CSS) --- */
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0; top: 0;
+            opacity: 0.7;
+            pointer-events: none;
+            width: 100%;
+        }
+        .glitch::before { color: #ff0000; transform: translateX(-2px); z-index: -1; }
+        .glitch::after { color: #00ffff; transform: translateX(2px); z-index: -2; }
+
+        .glitch-active::before { animation: glitch1 0.15s infinite; }
+        .glitch-active::after { animation: glitch2 0.15s infinite; }
+
+        @keyframes glitch1 {
+            0% { transform: translate(-2px, 0); }
+            50% { transform: translate(2px, -2px); }
+            100% { transform: translate(-1px, 1px); }
+        }
+        @keyframes glitch2 {
+            0% { transform: translate(2px, 0); }
+            50% { transform: translate(-2px, 2px); }
+            100% { transform: translate(1px, -1px); }
+        }
+
+        .word-glitch { display: inline-block; transition: opacity 0.1s ease; }
+        .word-glitch.hidden { opacity: 0; }
+    </style>
 </head>
-
 <body>
 
-<header class="nav">
-    <div class="nav-container">
-        <div class="logo">Pulse Forge</div>
+    <div id="bg-grid"></div>
 
-        <nav class="nav-links">
-            <a href="#">Inicio</a>
-            <a href="#">Sistema</a>
-            <a href="#">Registros</a>
-        </nav>
-
-        <button class="btn primary">Entrar</button>
-    </div>
-</header>
-
-<section class="hero">
-    <div class="hero-container">
-
-        <h1 id="title">
-            Un sistema que evoluciona contigo
-        </h1>
-
-        <p>
-            Pulse Forge no es solo un juego. Es una experiencia que responde a cada interacción,
-            adaptándose a tus decisiones en tiempo real.
-        </p>
-
-        <div class="hero-buttons">
-            <button class="btn primary" onclick="enterSystem()">
-                Entrar al sistema
-            </button>
-
-            <button class="btn secondary">
-                Ver más
-            </button>
+    <nav class="fixed top-0 w-full z-[100] border-b border-black/5 bg-white/5 backdrop-blur-md transition-all">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div id="logo-box" class="w-8 h-8 bg-black rounded flex items-center justify-center">
+                    <svg class="text-white w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <span class="font-bold text-xl tracking-tighter mono">PULSE FORGE</span>
+            </div>
+            <div id="status-tag" class="hidden md:block text-[10px] mono opacity-50 uppercase tracking-[0.2em]">[ Señal Estable ]</div>
+            <button id="nav-cta" class="bg-black text-white px-5 py-2 rounded-full text-sm font-semibold transition-all">Entrar al sistema</button>
         </div>
+    </nav>
 
-    </div>
-</section>
-
-<section class="features">
-    <div class="features-container">
-
-        <div class="feature">
-            <h3>👁️ Observación activa</h3>
-            <p>El sistema responde a cada acción del usuario.</p>
+    <section class="relative pt-40 pb-20 px-6 text-center min-h-screen flex flex-col justify-center">
+        <div class="reveal active max-w-5xl mx-auto z-10">
+            <span id="signal-tag" class="mono inline-block px-4 py-1 rounded-full bg-black/5 border border-black/10 text-[10px] font-bold uppercase mb-8 tracking-widest">
+                Future Signal Detected
+            </span>
+            <h1 class="hero-title text-6xl md:text-[90px] font-extrabold mb-10" id="main-title">
+                El sistema estaba dormido.<br>
+                Por qué lo activaste...?.
+            </h1>
+            <p class="text-xl md:text-2xl opacity-70 max-w-2xl mx-auto mb-12 font-light" id="main-desc">
+                No es un juego. Es un sistema que responde, aprende… y no olvida.
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                <button id="hero-cta" class="bg-black text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all">
+                    Entrar al sistema
+                </button>
+                <button class="px-10 py-4 rounded-2xl font-bold text-lg border border-current opacity-30 hover:opacity-100 transition-all mono text-sm">
+                    Ver registros
+                </button>
+            </div>
         </div>
+        <div id="logs" class="max-w-xs text-left mono text-[10px] opacity-40 fixed bottom-10 left-10 space-y-1 pointer-events-none z-[200]"></div>
+    </section>
 
-        <div class="feature">
-            <h3>⚙️ Evolución constante</h3>
-            <p>Cada decisión modifica el comportamiento del juego.</p>
+    <section class="max-w-7xl mx-auto px-6 py-40 grid md:grid-cols-3 gap-8">
+        <div class="reveal p-10 rounded-[2.5rem] glass">
+            <div class="mono text-[10px] opacity-40 mb-4 tracking-tighter">PROTOCOLO_01</div>
+            <h3 class="text-2xl font-bold mb-4">Observación Pasiva</h3>
+            <p class="opacity-60 leading-relaxed text-sm">El sistema no espera inputs. Analiza patrones de movimiento y micro-decisiones inconscientes.</p>
         </div>
-
-        <div class="feature">
-            <h3>🩸 Persistencia real</h3>
-            <p>No todo se reinicia. El sistema recuerda.</p>
+        <div class="reveal p-10 rounded-[2.5rem] glass">
+            <div class="mono text-[10px] opacity-40 mb-4 tracking-tighter">PROTOCOLO_02</div>
+            <h3 class="text-2xl font-bold mb-4">Memoria Celular</h3>
+            <p class="opacity-60 leading-relaxed text-sm">Pulse Forge recuerda cada duda. Las decisiones que no tomas son tan importantes como las que sí.</p>
         </div>
+        <div class="reveal p-10 rounded-[2.5rem] glass">
+            <div class="mono text-[10px] opacity-40 mb-4 tracking-tighter">PROTOCOLO_03</div>
+            <h3 class="text-2xl font-bold mb-4">Evolución Autónoma</h3>
+            <p class="opacity-60 leading-relaxed text-sm">Con el tiempo, la interfaz deja de ser una herramienta para convertirse en un reflejo inusual del usuario.</p>
+        </div>
+    </section>
 
-    </div>
-</section>
+    <footer class="py-20 text-center mono text-[10px] opacity-20" id="footer-text">
+        PULSE_FORGE_V.1.0.4 // OBSERVACIÓN_ACTIVA
+    </footer>
 
-<section class="logs">
-    <div class="logs-container">
-        <h2>Registros del sistema</h2>
+    <script>
+        const body = document.body;
+        const mainTitle = document.getElementById('main-title');
+        const mainDesc = document.getElementById('main-desc');
+        const logsContainer = document.getElementById('logs');
+        const heroCta = document.getElementById('hero-cta');
+        let chaos = 0;
 
-        <div class="log">[001] Sistema iniciado correctamente</div>
-        <div class="log">[014] Variación detectada</div>
-        <div class="log">[029] Patrón no reconocido</div>
-    </div>
-</section>
+        let path = localStorage.getItem("pf_path") || "A";
+        if (!localStorage.getItem("pf_path")) {
+            if (Math.random() < 0.5) { localStorage.setItem("pf_path", "B"); path = "B"; }
+        }
 
-<section class="cta">
-    <div class="cta-container">
-        <h2>El sistema ya está activo</h2>
-        <p>Accede ahora y forma parte del proceso.</p>
+        // --- SISTEMA DE COLOR LERP ---
+        function lerpColor(a, b, amount) {
+            const ah = parseInt(a.replace(/#/g, ''), 16),
+                  ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+                  bh = parseInt(b.replace(/#/g, ''), 16),
+                  br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+                  rr = ar + amount * (br - ar), rg = ag + amount * (bg - ag), rb = ab + amount * (bb - ab);
+            return `rgb(${rr|0},${rg|0},${rb|0})`;
+        }
 
-        <button class="btn primary" onclick="enterSystem()">
-            Acceder
-        </button>
-    </div>
-</section>
+        let targetScroll = 0, currentScroll = 0;
+        window.addEventListener("scroll", () => { targetScroll = window.scrollY; });
 
-<footer class="footer">
-    <div class="footer-container">
-        <p>© 2026 Pulse Forge</p>
-    </div>
-</footer>
+        function smoothColors() {
+            currentScroll += (targetScroll - currentScroll) * 0.08;
+            const scroll = currentScroll / (document.documentElement.scrollHeight - window.innerHeight);
+            let bg, text;
+            if (scroll < 0.5) {
+                const t = scroll / 0.5;
+                bg = lerpColor("#FDFCFD", "#2D0B5A", t); text = lerpColor("#1A1A1A", "#E9D5FF", t);
+            } else {
+                const t = (scroll - 0.5) / 0.5;
+                bg = lerpColor("#2D0B5A", "#0F0202", t); text = lerpColor("#E9D5FF", "#ff4444", t);
+            }
+            body.style.backgroundColor = bg;
+            body.style.color = text;
+            document.documentElement.style.setProperty("--accent", lerpColor("#000000", "#ff4444", scroll));
+            requestAnimationFrame(smoothColors);
+        }
+        smoothColors();
 
-<script src="script.js"></script>
+        function addLog(text, highlight = false) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            if (highlight) div.style.color = "#ff4444";
+            logsContainer.appendChild(div);
+            if (logsContainer.children.length > 10) logsContainer.removeChild(logsContainer.children[0]);
+        }
+
+        // MEMORIA Y RAMIFICACIÓN
+        let visits = localStorage.getItem("pf_visits") || 0;
+        visits++; localStorage.setItem("pf_visits", visits);
+        
+        let lastAction = localStorage.getItem("pf_last_action");
+        if (lastAction === "fast_scroll") addLog("[LOG] comportamiento impulsivo detectado anteriormente", true);
+        if (path === "A") addLog("[A] monitoreo estándar"); else addLog("[B] comportamiento fuera de rango", true);
+
+        // --- 🩸 BLOQUE 14: SISTEMA DE GLITCH GLOBAL (JS) ---
+        const glitchTargets = [
+            mainTitle, mainDesc, heroCta, 
+            document.querySelector("nav"), 
+            document.getElementById("footer-text")
+        ];
+
+        glitchTargets.forEach(el => {
+            if (!el) return;
+            el.classList.add("glitch");
+            el.setAttribute("data-text", el.innerText);
+        });
+
+        // Glitch Aleatorio Global
+        setInterval(() => {
+            if (Math.random() < 0.3) {
+                const el = glitchTargets[Math.floor(Math.random() * glitchTargets.length)];
+                if (!el) return;
+                el.classList.add("glitch-active");
+                setTimeout(() => el.classList.remove("glitch-active"), 150);
+            }
+        }, 2000);
+
+        // Palabras que desaparecen
+        function glitchWords(element) {
+            const words = element.innerText.split(" ");
+            element.innerHTML = words.map(w => `<span class="word-glitch">${w}</span>`).join(" ");
+        }
+        glitchWords(mainDesc);
+        glitchWords(mainTitle);
+
+        setInterval(() => {
+            const words = document.querySelectorAll(".word-glitch");
+            if (words.length === 0) return;
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            randomWord.classList.add("hidden");
+            setTimeout(() => randomWord.classList.remove("hidden"), 200);
+        }, 1500);
+
+        // Duplicación Random
+        setInterval(() => {
+            if (Math.random() < 0.15) {
+                const el = glitchTargets[Math.floor(Math.random() * glitchTargets.length)];
+                if (!el || el.tagName === "NAV") return;
+                const clone = el.cloneNode(true);
+                clone.classList.remove("glitch");
+                clone.style.cssText = `position:absolute; left:${Math.random()*10}px; top:${Math.random()*10}px; opacity:0.3; pointer-events:none; z-index:-1;`;
+                el.parentElement.appendChild(clone);
+                setTimeout(() => clone.remove(), 120);
+            }
+        }, 2500);
+
+        // --- OTROS BLOQUES ---
+        let lastScrollPos = window.scrollY;
+        window.addEventListener("scroll", () => {
+            let speed = Math.abs(window.scrollY - lastScrollPos);
+            lastScrollPos = window.scrollY;
+            if (speed > 100) { addLog("[!!!] comportamiento impulsivo", true); localStorage.setItem("pf_last_action", "fast_scroll"); }
+        });
+
+        heroCta.addEventListener("mouseover", () => {
+            if (Math.random() < 0.3) {
+                heroCta.style.transform = "translateX(80px)";
+                setTimeout(() => heroCta.style.transform = "translateX(0)", 1000);
+            }
+        });
+
+        heroCta.addEventListener("click", () => { window.location.href = "game.html"; });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "0") { addLog("[ADMIN] acceso oculto"); mainTitle.innerHTML = "No deberías saber esto."; }
+        });
+
+        setInterval(() => {
+            const now = new Date();
+            addLog(`[TIME] ${now.getHours()}:${now.getMinutes()}`);
+        }, 15000);
+
+        setInterval(() => {
+            chaos += 0.05;
+            if (Math.random() < chaos) { 
+                const el = glitchTargets[0];
+                el.style.transform = `skewX(${Math.random() > 0.5 ? 5 : -5}deg)`;
+                setTimeout(() => el.style.transform = "none", 100);
+            }
+        }, 3000);
+
+        let audioCtx, oscillator;
+        window.addEventListener('click', () => {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                oscillator = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                oscillator.frequency.setValueAtTime(40, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+                oscillator.connect(gain); gain.connect(audioCtx.destination);
+                oscillator.start();
+            }
+        }, { once: true });
+
+        // FINAL MEJORADO
+        setTimeout(() => {
+            addLog("[FINAL] acceso completado", true);
+            setTimeout(() => { addLog("[???] error: proceso no finalizado", true); mainTitle.innerHTML = "Esto no terminó."; }, 3000);
+        }, 45000);
+
+        // --- CIERRE FORZADO FINAL (60s) ---
+        setTimeout(() => {
+            addLog("[!!!] ubicación confirmada", true);
+            addLog("[!!!] iniciando protocolo de cierre", true);
+            document.title = "SESIÓN TERMINADA";
+            if (oscillator) oscillator.frequency.setValueAtTime(8, audioCtx.currentTime);
+
+            const overlay = document.createElement("div");
+            overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:black;color:#ff0000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'JetBrains Mono';z-index:9999;text-align:center;letter-spacing:0.3em;pointer-events:all;";
+            overlay.innerHTML = `<div style="font-size:2rem; margin-bottom:1rem;">SUJETO LOCALIZADO</div><div style="font-size:1rem; opacity:0.7;">CERRANDO SESIÓN OBLIGATORIA</div><div style="margin-top:2rem; font-size:0.7rem; opacity:0.4;">PROTOCOLO_Δ-17</div>`;
+            document.body.appendChild(overlay);
+            document.body.style.pointerEvents = "none";
+
+            let flashes = 0;
+            const glitchInterval = setInterval(() => {
+                overlay.style.opacity = flashes % 2 === 0 ? "0.2" : "1";
+                if (flashes++ > 6) clearInterval(glitchInterval);
+            }, 120);
+        }, 60000);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
