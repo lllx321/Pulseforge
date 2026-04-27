@@ -10,47 +10,92 @@
 
 <body>
 
-<div class="noise"></div>
+<header class="nav">
+    <div class="nav-container">
+        <div class="logo">Pulse Forge</div>
 
-<!-- AUDIO -->
-<audio id="bgSound" loop>
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_3c3a0e6c0f.mp3">
-</audio>
+        <nav class="nav-links">
+            <a href="#">Inicio</a>
+            <a href="#">Sistema</a>
+            <a href="#">Registros</a>
+        </nav>
 
-<!-- HERO -->
+        <button class="btn primary">Entrar</button>
+    </div>
+</header>
+
 <section class="hero">
-    <h1 class="glitch" data-text="PULSE FORGE">PULSE FORGE</h1>
-    <p class="subtitle" id="subtitle">Inicializando sistema...</p>
-    <button class="btn" id="enterBtn">ENTRAR</button>
-</section>
+    <div class="hero-container">
 
-<!-- ANOMALÍAS -->
-<section>
-    <h2>ANOMALÍAS</h2>
-    <div class="cards">
-        <div class="card">👁️ El sistema observa</div>
-        <div class="card">⚙️ Responde a tus acciones</div>
-        <div class="card">🩸 Cada cambio deja rastro</div>
-        <div class="card">🔁 Nada reinicia igual</div>
+        <h1 id="title">
+            Un sistema que evoluciona contigo
+        </h1>
+
+        <p>
+            Pulse Forge no es solo un juego. Es una experiencia que responde a cada interacción,
+            adaptándose a tus decisiones en tiempo real.
+        </p>
+
+        <div class="hero-buttons">
+            <button class="btn primary" onclick="enterSystem()">
+                Entrar al sistema
+            </button>
+
+            <button class="btn secondary">
+                Ver más
+            </button>
+        </div>
+
     </div>
 </section>
 
-<!-- REGISTROS -->
+<section class="features">
+    <div class="features-container">
+
+        <div class="feature">
+            <h3>👁️ Observación activa</h3>
+            <p>El sistema responde a cada acción del usuario.</p>
+        </div>
+
+        <div class="feature">
+            <h3>⚙️ Evolución constante</h3>
+            <p>Cada decisión modifica el comportamiento del juego.</p>
+        </div>
+
+        <div class="feature">
+            <h3>🩸 Persistencia real</h3>
+            <p>No todo se reinicia. El sistema recuerda.</p>
+        </div>
+
+    </div>
+</section>
+
 <section class="logs">
-    <h2>REGISTROS</h2>
-    <div class="log">[001] señal detectada...</div>
-    <div class="log">[014] cambio no autorizado</div>
-    <div class="log">[029] comportamiento anómalo</div>
-    <div class="log">[???] acceso observado</div>
+    <div class="logs-container">
+        <h2>Registros del sistema</h2>
+
+        <div class="log">[001] Sistema iniciado correctamente</div>
+        <div class="log">[014] Variación detectada</div>
+        <div class="log">[029] Patrón no reconocido</div>
+    </div>
 </section>
 
-<!-- CTA -->
-<section>
-    <h2>El sistema ya te detectó</h2>
-    <button class="btn" onclick="fakeAccessSequence()">ACCEDER</button>
+<section class="cta">
+    <div class="cta-container">
+        <h2>El sistema ya está activo</h2>
+        <p>Accede ahora y forma parte del proceso.</p>
+
+        <button class="btn primary" onclick="enterSystem()">
+            Acceder
+        </button>
+    </div>
 </section>
 
-<footer>Pulse Forge // conexión inestable</footer>
+<footer class="footer">
+    <div class="footer-container">
+        <p>© 2026 Pulse Forge</p>
+    </div>
+</footer>
 
 <script src="script.js"></script>
 </body>
