@@ -1,3 +1,5 @@
+
+index.html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -264,6 +266,9 @@
                 <button id="hero-cta" class="bg-black text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all">
                     Entrar al sistema
                 </button>
+                <a href="memorias.html" class="bg-black text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-2xl transition-all hover:shadow-lg hover:scale-105 inline-block">
+                    Acceder a Memorias
+                </a>
             </div>
         </div>
         <div id="logs" class="max-w-xs text-left mono text-[10px] opacity-40 fixed bottom-10 left-10 space-y-1 pointer-events-none z-[200]"></div>
@@ -532,6 +537,168 @@
             entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- SISTEMA DE DESBLOQUEO DE CODIGOS ---
+        const CODES_SYSTEM = {
+            "NULL-LOG-01": { triggered: false },
+            "VOID-TRACE-02": { triggered: false },
+            "ECHO-SIGNAL-03": { triggered: false },
+            "NULL-LOG-03": { triggered: false },
+            "INTRUDER-INDEX": { triggered: false },
+            "CORRUPT-TRACE-04": { triggered: false },
+            "MEMORY-GATE": { triggered: false },
+            "THYRIAN-ECHO": { triggered: false },
+            "SEAL-FAILURE": { triggered: false }
+        };
+
+        function unlockCode(codeKey) {
+            if (CODES_SYSTEM[codeKey] && !CODES_SYSTEM[codeKey].triggered) {
+                CODES_SYSTEM[codeKey].triggered = true;
+                let unlockedCodes = JSON.parse(localStorage.getItem("pf_unlockedCodes") || "{}");
+                unlockedCodes[codeKey] = true;
+                localStorage.setItem("pf_unlockedCodes", JSON.stringify(unlockedCodes));
+                addLog(`[CODIGO DESBLOQUEADO] ${codeKey}`, true);
+            }
+        }
+
+        let fastScrollCount = 0;
+        let lastFastScrollTime = 0;
+        window.addEventListener("scroll", () => {
+            const now = Date.now();
+            if (now - lastFastScrollTime < 100 && now - lastFastScrollTime > 0) {
+                fastScrollCount++;
+                if (fastScrollCount >= 5) {
+                    unlockCode("NULL-LOG-01");
+                    fastScrollCount = 0;
+                }
+            }
+            lastFastScrollTime = now;
+        });
+
+        let eyeClickCount = 0;
+        eyes.forEach(eye => {
+            eye.socket.addEventListener('click', () => {
+                eyeClickCount++;
+                if (eyeClickCount >= 3) {
+                    unlockCode("VOID-TRACE-02");
+                    eyeClickCount = 0;
+                }
+            });
+        });
+
+        let idleTimer3 = null;
+        document.addEventListener("mousemove", () => {
+            clearTimeout(idleTimer3);
+            idleTimer3 = setTimeout(() => {
+                unlockCode("ECHO-SIGNAL-03");
+            }, 5000);
+        });
+        document.addEventListener("click", () => {
+            clearTimeout(idleTimer3);
+        });
+
+        let scrolledToEnd = false;
+        let endWaitTimer = null;
+        window.addEventListener("scroll", () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (winScroll >= height - 10) {
+                if (!scrolledToEnd) {
+                    scrolledToEnd = true;
+                    clearTimeout(endWaitTimer);
+                    endWaitTimer = setTimeout(() => {
+                        unlockCode("NULL-LOG-03");
+                    }, 3000);
+                }
+            } else {
+                scrolledToEnd = false;
+                clearTimeout(endWaitTimer);
+            }
+        });
+
+        let titleHoverTimer = null;
+        mainTitle.addEventListener("mouseenter", () => {
+            titleHoverTimer = setTimeout(() => {
+                unlockCode("INTRUDER-INDEX");
+            }, 2000);
+        });
+        mainTitle.addEventListener("mouseleave", () => {
+            clearTimeout(titleHoverTimer);
+        });
+
+        function createFloatingCode() {
+            if (CODES_SYSTEM["CORRUPT-TRACE-04"].triggered) return;
+            const floatingCode = document.createElement("div");
+            floatingCode.className = "ghost-msg ghost-glitch";
+            floatingCode.innerText = "CORRUPT-TRACE-04";
+            floatingCode.style.left = Math.random() * 80 + 10 + "%";
+            floatingCode.style.top = Math.random() * 80 + 10 + "%";
+            floatingCode.style.cursor = "pointer";
+            floatingCode.addEventListener("click", (e) => {
+                e.stopPropagation();
+                unlockCode("CORRUPT-TRACE-04");
+                floatingCode.remove();
+            });
+            document.body.appendChild(floatingCode);
+            setTimeout(() => floatingCode.remove(), 4000);
+        }
+        setInterval(() => {
+            if (Math.random() > 0.7 && !CODES_SYSTEM["CORRUPT-TRACE-04"].triggered) {
+                createFloatingCode();
+            }
+        }, 8000);
+
+        let memoriasBtnHoverCount = 0;
+        const memoriasBtnLink = document.querySelector('a[href="memorias.html"]');
+        if (memoriasBtnLink) {
+            const style = document.createElement('style');
+            style.textContent = `
+                .memorias-btn-glitch {
+                    animation: memorias-glitch 0.3s infinite;
+                    text-shadow: 
+                        2px 0 #ff0033,
+                        -2px 0 #00ffff,
+                        0 0 10px rgba(255, 0, 51, 0.5);
+                }
+                @keyframes memorias-glitch {
+                    0% { transform: translate(0); }
+                    20% { transform: translate(-2px, 2px); }
+                    40% { transform: translate(2px, -2px); }
+                    60% { transform: translate(-1px, 1px); }
+                    80% { transform: translate(1px, -1px); }
+                    100% { transform: translate(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            memoriasBtnLink.addEventListener("mouseenter", () => {
+                memoriasBtnHoverCount++;
+                memoriasBtnLink.classList.add('memorias-btn-glitch');
+                if (memoriasBtnHoverCount >= 3) {
+                    unlockCode("MEMORY-GATE");
+                    memoriasBtnHoverCount = 0;
+                }
+            });
+            
+            memoriasBtnLink.addEventListener("mouseleave", () => {
+                memoriasBtnLink.classList.remove('memorias-btn-glitch');
+            });
+        }
+
+        const firstLetterSpan = document.querySelector(".word-glitch");
+        if (firstLetterSpan) {
+            firstLetterSpan.style.cursor = "pointer";
+            firstLetterSpan.addEventListener("click", (e) => {
+                e.stopPropagation();
+                unlockCode("THYRIAN-ECHO");
+            });
+        }
+
+        setInterval(() => {
+            if (corruption > 15) {
+                unlockCode("SEAL-FAILURE");
+            }
+        }, 1000);
 
     </script>
 </body>
