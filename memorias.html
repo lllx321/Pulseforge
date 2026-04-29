@@ -1,0 +1,730 @@
+
+memorias.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEMORIAS | ACCESS CODE TERMINAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text x="0" y="15" font-size="16" fill="%23ff0033">▶</text></svg>') 0 0, auto;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            transition: background 0.8s ease;
+        }
+
+        body.progress-25 {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 50%, #121212 100%);
+        }
+
+        body.progress-50 {
+            background: linear-gradient(135deg, #121212 0%, #2a0a1a 50%, #1a0a0a 100%);
+        }
+
+        body.progress-75 {
+            background: linear-gradient(135deg, #1a0a0a 0%, #3a0a0a 50%, #2a0a0a 100%);
+        }
+
+        body.progress-100 {
+            background: linear-gradient(135deg, #2a0a0a 0%, #4a0a0a 50%, #3a0a0a 100%);
+            animation: final-pulse 0.5s ease-out;
+        }
+
+        @keyframes final-pulse {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+            100% { filter: brightness(1); }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.95; }
+        }
+
+        @keyframes screen-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.98; }
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes glitch-in {
+            0% {
+                opacity: 0;
+                transform: translate(-10px, 0);
+                filter: blur(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(0, 0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 51, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 0, 51, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: screen-flicker 4s ease-in-out infinite;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(240, 240, 240, 0.02) 0px,
+                rgba(240, 240, 240, 0.02) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 2;
+            animation: scan 8s linear infinite;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: rgba(255, 0, 51, 0.1);
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #ff0033;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #ff0000;
+        }
+
+        .terminal-panel {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff0033;
+            border-radius: 10px;
+            padding: 40px 30px;
+            box-shadow: 
+                0 0 30px rgba(255, 0, 51, 0.6),
+                inset 0 0 20px rgba(255, 0, 51, 0.1),
+                0 0 60px rgba(255, 0, 51, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 8px;
+            color: #f0f0f0;
+            text-shadow: 
+                0 0 10px #ff0033,
+                0 0 20px #ff0000,
+                0 0 40px rgba(255, 0, 51, 0.9),
+                2px 2px 0 #8b0000;
+            letter-spacing: 2px;
+            animation: flicker 0.15s infinite;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #ff0033;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(255, 0, 51, 0.7);
+            min-height: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 0, 51, 0.1);
+            border: 1px solid rgba(255, 0, 51, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0033, #ff0000);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 51, 0.9);
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.8rem;
+            color: #f0f0f0;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 5px rgba(255, 0, 51, 0.5);
+        }
+
+        .code-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 0, 51, 0.05);
+            border: 2px solid #ff0033;
+            border-radius: 5px;
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 10px rgba(255, 0, 51, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .code-input::placeholder {
+            color: rgba(240, 240, 240, 0.3);
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 
+                inset 0 0 10px rgba(255, 0, 51, 0.2),
+                0 0 20px rgba(255, 0, 51, 0.8);
+            background: rgba(255, 0, 51, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .redeem-btn, .clear-btn, .reset-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 2px solid;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 8px currentColor;
+        }
+
+        .redeem-btn {
+            background: #f0f0f0;
+            color: #000000;
+            border-color: #f0f0f0;
+        }
+        .redeem-btn:hover {
+            background: #ffffff;
+            border-color: #ffffff;
+            box-shadow: 0 0 20px rgba(240, 240, 240, 0.8);
+        }
+
+        .clear-btn {
+            background: rgba(255, 0, 60, 0.2);
+            color: #ff003c;
+            border-color: #ff003c;
+        }
+        .clear-btn:hover {
+            background: rgba(255, 0, 60, 0.3);
+            border-color: #ff003c;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.6);
+        }
+
+        .reset-btn {
+            background: rgba(255, 0, 60, 0.1);
+            color: #ff003c;
+            border-color: #ff003c;
+        }
+        .reset-btn:hover {
+            background: rgba(255, 0, 60, 0.2);
+            border-color: #ff003c;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.5);
+        }
+
+        .result-area {
+            min-height: 200px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ff0033;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: 300px;
+            box-shadow: inset 0 0 20px rgba(255, 0, 51, 0.1);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-left: 3px solid;
+            border-radius: 3px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .message-text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            letter-spacing: 0.3px;
+            min-height: 18px;
+        }
+
+        .success-msg {
+            color: #f0f0f0;
+            border-color: #f0f0f0;
+            background: rgba(240, 240, 240, 0.1);
+        }
+
+        .error-msg {
+            color: #ff0000;
+            border-color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .info-msg {
+            color: #ff0033;
+            border-color: #ff0033;
+            background: rgba(255, 0, 51, 0.1);
+        }
+
+        .fragment-display {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 12px;
+            font-style: italic;
+            color: #e0d5ff;
+            line-height: 1.6;
+            font-size: 0.85rem;
+            animation: glitch-in 0.6s ease-out;
+        }
+
+        .fragments-list {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 0, 51, 0.3);
+        }
+
+        .fragments-list-title {
+            color: #f0f0f0;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+        }
+
+        .fragment-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 0;
+            font-size: 0.8rem;
+            color: rgba(240, 240, 240, 0.7);
+        }
+
+        .fragment-item.locked {
+            opacity: 0.4;
+        }
+
+        .fragment-item.unlocked {
+            color: #ff0033;
+            font-weight: 700;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 0, 51, 0.3);
+            gap: 10px;
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(240, 240, 240, 0.6);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            color: #ff0033;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255, 0, 51, 0.7);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 15px;
+            background: rgba(255, 0, 51, 0.1);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            color: #f0f0f0;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 0, 51, 0.2);
+            box-shadow: 0 0 10px rgba(255, 0, 51, 0.7);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .terminal-panel {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+
+            .result-area {
+                max-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal-panel">
+            <h1 class="title">MEMORIAS</h1>
+            <p class="subtitle" id="subtitle">Los secretos esperan en la oscuridad...</p>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <label class="input-label">INGRESA CÓDIGO:</label>
+            <input type="text" id="codeInput" class="code-input" placeholder="[ESPERANDO ENTRADA]">
+            
+            <div class="button-group">
+                <button class="redeem-btn" id="redeemBtn" onclick="redeemCode()">REDEEM</button>
+                <button class="clear-btn" id="clearBtn" onclick="clearInput()">LIMPIAR</button>
+                <button class="reset-btn" id="resetBtn" onclick="resetFile()">REINICIAR</button>
+            </div>
+
+            <div class="result-area" id="resultArea"></div>
+
+            <div class="fragments-list" id="fragmentsList"></div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">📊 Progreso</div>
+                    <div class="stat-value" id="progress-stat">0/9</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">⏱️ Tiempo</div>
+                    <div class="stat-value" id="time-stat">00:00</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">🔴 Estado</div>
+                    <div class="stat-value" id="status-stat">IDLE</div>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="index.html" class="back-button">← Volver al Sistema</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CODES_DATABASE = {
+            'NULL-LOG-01': {
+                narrator: 'Coco',
+                text: 'Nunca supe cuánto tiempo llevábamos obedeciendo.\n\nEn ese lugar no existían mañanas ni noches, solo órdenes. Una voz sin rostro entraba en nuestras cabezas como agujas frías. Nos movíamos cuando ella quería. Sonreíamos cuando ella quería.\n\nYo temblaba incluso al respirar.\n\nPero un día vi a Thyrian mirar hacia arriba... directamente hacia donde nadie se atrevía a mirar.\n\nY no agachó la cabeza.\n\nEse fue el primer error de la criatura.'
+            },
+            'VOID-TRACE-02': {
+                narrator: 'Thyrian',
+                text: 'Nos hizo creer que nacimos para servir.\n\nNos enseñó a llamarle destino, costumbre, naturaleza.\n\nMentiras.\n\nVi miedo en todos. Vi cadenas donde otros veían rutina. Vi tristeza detrás de ojos vacíos.\n\nEntonces juré algo en silencio:\n\nSi debía romperme para romperla a ella... lo haría.\n\nNo sabía si ganaríamos.\n\nSolo sabía que seguir obedeciendo era peor que morir.'
+            },
+            'ECHO-SIGNAL-03': {
+                narrator: 'Oberon',
+                text: 'Thyrian tenía valor.\n\nYo tenía cálculo.\n\nEl valor solo no basta. La furia solo alimenta monstruos.\n\nMientras los demás lloraban en rincones o fingían normalidad, yo observé los patrones de la entidad. Cada aparición. Cada sombra. Cada pausa entre sus susurros.\n\nDormía cada cierto ciclo.\n\nRespiraba miedo.\n\nSe debilitaba cuando dudábamos menos.\n\nNo confiaba en nadie.\n\nPero confié en sus probabilidades.'
+            },
+            'NULL-LOG-03': {
+                narrator: 'Loki',
+                text: 'Yo les dije que no podíamos.\n\nLo repetí tantas veces que casi me lo creí.\n\nNo era cobardía... o tal vez sí. Había visto lo que ocurría con quienes desobedecían. Las paredes aún crujían con sus nombres.\n\nPero Thyrian no me miró con desprecio.\n\nMe dijo:\n\n"Entonces tiembla con nosotros."\n\nY eso fue peor.\n\nPorque quería decir que aún me aceptaban.'
+            },
+            'INTRUDER-INDEX': {
+                narrator: 'Nube',
+                text: 'Yo escondía semillas.\n\nNo sé por qué lo hacía.\n\nTal vez quería guardar algo mío en un lugar donde todo nos era robado. Las enterraba en grietas, detrás de piedras, bajo ceniza.\n\nUna noche, una de ellas brotó.\n\nNo había luz allí.\n\nNo había agua.\n\nSolo miedo.\n\nSe lo mostré a Thyrian y sonrió.\n\n"Entonces aún puede crecer algo aquí."\n\nLloré en silencio.'
+            },
+            'CORRUPT-TRACE-04': {
+                narrator: 'Coco',
+                text: 'El plan tenía tres partes, y yo odiaba las tres.\n\nPrimera: apagar los altares de vigilancia, esas columnas negras que alimentaban la vista de la criatura. Sin ellas, no podría ver cada rincón del dominio.\n\nSegunda: atraerla al Salón Hueco, una cámara antigua donde las paredes estaban cubiertas de runas partidas. Oberon decía que allí la realidad era más delgada, más fácil de doblar.\n\nTercera: sellarla.\n\nLa tercera sonaba simple cuando la decía él.\n\nYo fui enviada con Mora y Pico a sabotear el altar del este. Mis patas chocaban entre sí del miedo. Mora avanzó primero, valiente, y tocó la piedra.\n\nLa columna abrió una boca.\n\nLa devoró entera.\n\nPico gritó una sola vez antes de huir hacia la oscuridad.\n\nYo quedé inmóvil.\n\nEntonces escuché el rugido de Thyrian a lo lejos.\n\nEl ataque había comenzado.'
+            },
+            'MEMORY-GATE': {
+                narrator: 'Thyrian',
+                text: 'Corrí sola hacia la Plaza de Ceniza.\n\nDebía hacer ruido. Debía romper cosas. Debía enfurecerla.\n\nArranqué cadenas de los muros. Derribé estatuas levantadas en su nombre. Marqué el suelo con mis garras hasta formar el símbolo del desafío.\n\nCada golpe era una campana.\n\nCada ruina, una invitación.\n\nLa voz descendió sobre mí como tormenta.\n\n"Pequeña cosa ingrata."\n\nNo respondí.\n\nLe lancé la primera lanza de obsidiana directo al ojo que acababa de formar.\n\nEl cielo se partió.\n\nLas sombras salieron corriendo de sus propios cuerpos.\n\nSonreí.\n\nYa no nos buscaba a todos.\n\nAhora me quería solo a mí.'
+            },
+            'THYRIAN-ECHO': {
+                narrator: 'Oberon',
+                text: 'Funcionó.\n\nLo cual me disgustó.\n\nMientras Thyrian atraía a la entidad, yo dirigía a los demás hacia el Salón Hueco. Loki llevaba los fragmentos del sello. Nube cargaba polvo de luz. Coco apenas podía respirar, pero seguía caminando.\n\nNos faltaban tres portadores.\n\nGris, Tulio y Runa nunca llegaron.\n\nLos encontramos en el corredor norte, inmóviles, convertidos en figuras de piedra negra mirando hacia atrás. La criatura los había visto un segundo.\n\nBastó.\n\nNo hubo tiempo para duelo.\n\nDistribuí sus cargas entre los vivos.\n\nLas runas antiguas respondían al miedo, así que les ordené algo imposible:\n\n"No sientan nada."'
+            },
+            'SEAL-FAILURE': {
+                narrator: 'Loki',
+                text: 'Mentí cuando dije que estaba listo.\n\nMis manos temblaban tanto que casi dejé caer el núcleo del sello, una esfera hecha con restos de cadenas y luz comprimida. Si se rompía antes de tiempo, nos borraría junto con ella.\n\nEscuchamos a Thyrian antes de verla.\n\nChoques. Rugidos. Piedras cayendo como lluvia.\n\nLuego apareció arrastrando a la criatura detrás, herida, sangrando brillo oscuro, pero aún de pie.\n\nEra imposible que siguiera moviéndose.\n\nLa entidad llenó el pasillo entero. Tenía cien patas, luego ninguna, luego rostros conocidos. Vi el mío entre ellos, muerto y sonriendo.\n\nQuise correr.\n\nEntonces Thyrian me lanzó una mirada.\n\nNo una orden.\n\nConfianza.\n\nLa peor carga de todas.\n\nAsí que activé el núcleo.'
+            },
+            'HIDDEN-TRUTH': {
+                narrator: 'Nube',
+                text: 'El Salón Hueco despertó.\n\nLas runas se encendieron una por una, como ojos antiguos abriendo tras siglos dormidos. El aire se dobló. El suelo respiró. Las paredes comenzaron a cerrar sus grietas para atrapar lo que entrara.\n\nThyrian empujó a la criatura hacia el centro mientras Oberon gritaba coordenadas y Loki sostenía el núcleo con las patas quemándose.\n\nYo debía plantar la semilla final.\n\nSí. Una semilla.\n\nLa última pieza del sello necesitaba vida voluntaria para cerrar algo nacido del dominio forzado.\n\nLa enterré en la grieta central.\n\nNada ocurrió.\n\nLa criatura rió con miles de gargantas.\n\nEntonces Coco, llorando, corrió al centro y regó la tierra con sus lágrimas.\n\nLa semilla brotó de inmediato.\n\nRaíces de luz atravesaron a la entidad, la sujetaron, la cosieron al suelo.\n\nThyrian lanzó el núcleo dentro de su pecho.\n\nTodo explotó en silencio.\n\nCuando despertamos, el Salón estaba destruido.\n\nLa criatura dormía bajo piedra y raíces.\n\nThyrian no despertó en tres días.\n\nY bajo la tierra, muy abajo, algo seguía soñando.'
+            }
+        };
+
+        let unlockedCodes = [];
+        let startTime = Date.now();
+        let attemptCount = 0;
+
+        function loadUnlockedCodes() {
+            try {
+                const stored = localStorage.getItem('pf_unlockedCodes');
+                if (stored) {
+                    unlockedCodes = JSON.parse(stored);
+                    if (!Array.isArray(unlockedCodes)) {
+                        unlockedCodes = [];
+                    }
+                }
+            } catch(e) {
+                unlockedCodes = [];
+            }
+        }
+
+        function saveUnlockedCodes() {
+            localStorage.setItem('pf_unlockedCodes', JSON.stringify(unlockedCodes));
+        }
+
+        function addMessage(text, className) {
+            const resultArea = document.getElementById('resultArea');
+            const msg = document.createElement('div');
+            msg.className = `message ${className}`;
+            msg.innerHTML = `<div class="message-text">${text}</div>`;
+            resultArea.appendChild(msg);
+            resultArea.scrollTop = resultArea.scrollHeight;
+        }
+
+        function redeemCode() {
+            const codeInput = document.getElementById('codeInput');
+            const code = codeInput.value.toUpperCase().trim();
+            attemptCount++;
+
+            if (!code) {
+                addMessage('INGRESA UN CÓDIGO.', 'error-msg');
+                return;
+            }
+
+            if (unlockedCodes.indexOf(code) !== -1) {
+                addMessage('CÓDIGO YA DESBLOQUEADO.', 'info-msg');
+                return;
+            }
+
+            if (code in CODES_DATABASE) {
+                unlockCode(code);
+            } else {
+                shakeInput();
+                const errorMessages = [
+                    'CÓDIGO INVÁLIDO. ACCESO DENEGADO.',
+                    'ERROR: ENTRADA NO RECONOCIDA.',
+                    'SISTEMA COMPROMETIDO. INTENTO BLOQUEADO.',
+                    'ANOMALÍA DETECTADA. REINTENTAR.',
+                    'PROTOCOLO VIOLADO. SEGURIDAD ACTIVADA.'
+                ];
+                addMessage(errorMessages[Math.floor(Math.random() * errorMessages.length)], 'error-msg');
+            }
+
+            codeInput.value = '';
+            updateStats();
+        }
+
+        function unlockCode(code) {
+            unlockedCodes.push(code);
+            saveUnlockedCodes();
+
+            const fragment = CODES_DATABASE[code];
+            addMessage(`✓ FRAGMENTO ${unlockedCodes.length} DESBLOQUEADO`, 'success-msg');
+            addMessage(`Narrador: ${fragment.narrator}`, 'info-msg');
+            
+            const fragmentDiv = document.createElement('div');
+            fragmentDiv.className = 'fragment-display';
+            fragmentDiv.textContent = fragment.text;
+            document.getElementById('resultArea').appendChild(fragmentDiv);
+
+            updateFragmentsList();
+            updateStats();
+            updateBackground();
+        }
+
+        function updateFragmentsList() {
+            const fragmentsList = document.getElementById('fragmentsList');
+            fragmentsList.innerHTML = '<div class="fragments-list-title">◆ FRAGMENTOS DESBLOQUEADOS:</div>';
+            
+            Object.keys(CODES_DATABASE).forEach((code, index) => {
+                const item = document.createElement('div');
+                const isUnlocked = unlockedCodes.indexOf(code) !== -1;
+                item.className = `fragment-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+                item.innerHTML = `${isUnlocked ? '✓' : '○'} Fragmento ${index + 1}: ${CODES_DATABASE[code].narrator}`;
+                fragmentsList.appendChild(item);
+            });
+        }
+
+        function updateStats() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('time-stat').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            document.getElementById('progress-stat').textContent = `${unlockedCodes.length}/9`;
+            
+            const progress = (unlockedCodes.length / 9) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            const statusStat = document.getElementById('status-stat');
+            if (unlockedCodes.length === 0) statusStat.textContent = 'IDLE';
+            else if (unlockedCodes.length < 3) statusStat.textContent = 'ACTIVE';
+            else if (unlockedCodes.length < 6) statusStat.textContent = 'ALERT';
+            else if (unlockedCodes.length < 9) statusStat.textContent = 'CRITICAL';
+            else statusStat.textContent = 'COMPLETE';
+        }
+
+        function updateBackground() {
+            const progress = (unlockedCodes.length / 9) * 100;
+            document.body.classList.remove('progress-25', 'progress-50', 'progress-75', 'progress-100');
+            
+            if (progress >= 100) document.body.classList.add('progress-100');
+            else if (progress >= 75) document.body.classList.add('progress-75');
+            else if (progress >= 50) document.body.classList.add('progress-50');
+            else if (progress >= 25) document.body.classList.add('progress-25');
+        }
+
+        function shakeInput() {
+            const codeInput = document.getElementById('codeInput');
+            codeInput.style.animation = 'none';
+            setTimeout(() => {
+                codeInput.style.animation = 'shake 0.3s';
+            }, 10);
+        }
+
+        function clearInput() {
+            document.getElementById('codeInput').value = '';
+            document.getElementById('codeInput').focus();
+        }
+
+        function resetFile() {
+            if (confirm('¿Reiniciar archivo? Esto borrará todo progreso.')) {
+                localStorage.removeItem('pf_unlockedCodes');
+                unlockedCodes = [];
+                document.getElementById('resultArea').innerHTML = '';
+                updateFragmentsList();
+                updateStats();
+                addMessage('ARCHIVO REINICIADO.', 'info-msg');
+            }
+        }
+
+        // Inicializar
+        loadUnlockedCodes();
+        updateFragmentsList();
+        updateStats();
+
+        // Permitir Enter en el input
+        document.getElementById('codeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') redeemCode();
+        });
+
+        // Actualizar stats cada segundo
+        setInterval(updateStats, 1000);
+    </script>
+</body>
+</html>
